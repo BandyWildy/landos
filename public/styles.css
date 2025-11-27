@@ -259,6 +259,15 @@ nav {
     filter: grayscale(0%);
 }
 
+.gallery-placeholder,
+.gallery-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-style: italic;
+}
+
 /* Booking Section */
 #book {
     padding: 6rem 0;
@@ -296,6 +305,66 @@ footer p {
     opacity: 0.5;
     font-size: 0.9rem;
     letter-spacing: 2px;
+}
+
+/* Instagram & Social Links */
+.instagram-link {
+    display: flex;
+    align-items: center;
+    color: var(--light-color) !important;
+    transition: color 0.3s;
+}
+
+.instagram-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.instagram-link svg {
+    transition: transform 0.3s;
+}
+
+.instagram-link:hover svg {
+    transform: scale(1.1);
+}
+
+.link-accent {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.link-accent:hover {
+    border-color: var(--primary-color);
+}
+
+.social-links {
+    margin-top: 2.5rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #333;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    color: var(--light-color);
+    border-color: var(--primary-color);
+    background: rgba(139, 0, 0, 0.1);
+}
+
+.social-link svg {
+    transition: transform 0.3s;
+}
+
+.social-link:hover svg {
+    transform: scale(1.1);
 }
 
 /* Responsive Design */

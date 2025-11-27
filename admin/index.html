@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адмін панель | Marina Marynych</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #e8e8e8;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #8b0000;
+            border-bottom: 1px solid #333;
+            padding-bottom: 1rem;
+        }
+        .upload-section {
+            background: #222;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px dashed #444;
+        }
+        .upload-section.dragover {
+            border-color: #8b0000;
+            background: rgba(139, 0, 0, 0.1);
+        }
+        .upload-label {
+            display: block;
+            text-align: center;
+            cursor: pointer;
+            padding: 2rem;
+        }
+        .upload-label span {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .upload-label small { color: #666; }
+        #fileInput { display: none; }
+        .btn {
+            background: #8b0000;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #a00000; }
+        .btn:disabled { background: #444; cursor: not-allowed; }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gallery-item .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover .overlay { opacity: 1; }
+        .delete-btn {
+            background: #8b0000;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .delete-btn:hover { background: #a00000; }
+        .message {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .message.success { background: rgba(0, 128, 0, 0.2); border: 1px solid green; }
+        .message.error { background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; }
+        .loading { text-align: center; padding: 2rem; color: #666; }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        .preview-item {
+            aspect-ratio: 1;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .back-link {
+            display: inline-block;
+            color: #8b0000;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Назад на сайт</a>
+        <h1>Управління фото</h1>
+        
+        <div id="message"></div>
+        
+        <div class="upload-section" id="dropZone">
+            <label class="upload-label" for="fileInput">
+                <span>Перетягніть фото сюди або натисніть для вибору</span>
+                <small>JPG, PNG, WebP до 10MB</small>
+            </label>
+            <input type="file" id="fileInput" multiple accept="image/*">
+            <div class="preview-grid" id="previewGrid"></div>
+            <button class="btn" id="uploadBtn" style="display: none;">Завантажити</button>
+        </div>
+        
+        <h2 style="margin-bottom: 1rem;">Поточні фото</h2>
+        <div class="gallery" id="gallery">
+            <div class="loading">Завантаження...</div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const gallery = document.getElementById('gallery');
+        const message = document.getElementById('message');
+        
+        let selectedFiles = [];
+
+        function showMessage(text, type) {
+            message.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => message.innerHTML = '', 3000);
+        }
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            previewGrid.innerHTML = '';
+            
+            selectedFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    previewGrid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            uploadBtn.style.display = selectedFiles.length > 0 ? 'block' : 'none';
+        }
+
+        uploadBtn.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) return;
+            
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Завантаження...';
+            
+            const formData = new FormData();
+            selectedFiles.forEach(file => formData.append('images', file));
+            
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showMessage(`Завантажено ${data.images.length} фото`, 'success');
+                    selectedFiles = [];
+                    previewGrid.innerHTML = '';
+                    uploadBtn.style.display = 'none';
+                    fileInput.value = '';
+                    loadGallery();
+                } else {
+                    showMessage(data.error || 'Помилка завантаження', 'error');
+                }
+            } catch (err) {
+                showMessage('Помилка: ' + err.message, 'error');
+            }
+            
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = 'Завантажити';
+        });
+
+        async function loadGallery() {
+            try {
+                const res = await fetch('/api/images');
+                const images = await res.json();
+                
+                if (images.length === 0) {
+                    gallery.innerHTML = '<p style="color: #666;">Немає завантажених фото</p>';
+                    return;
+                }
+                
+                gallery.innerHTML = images.map(img => `
+                    <div class="gallery-item">
+                        <img src="${img.url}" alt="${img.name}">
+                        <div class="overlay">
+                            <button class="delete-btn" onclick="deleteImage('${img.name}')">Видалити</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                gallery.innerHTML = '<p style="color: #8b0000;">Помилка завантаження галереї</p>';
+            }
+        }
+
+        async function deleteImage(name) {
+            if (!confirm('Видалити це фото?')) return;
+            
+            try {
+                const res = await fetch(`/api/images/${name}`, { method: 'DELETE' });
+                const data = await res.json();
+                
+                if (data.success) {
+                    showMessage('Фото видалено', 'success');
+                    loadGallery();
+                } else {
+                    showMessage(data.error || 'Помилка видалення', 'error');
+                }
+            } catch (err) {
+                showMessage('Помилка: ' + err.message, 'error');
+            }
+        }
+
+        loadGallery();
+    </script>
+</body>
+</html>
