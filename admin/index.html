@@ -16,38 +16,57 @@
         .container { max-width: 1200px; margin: 0 auto; }
         h1 {
             font-size: 2rem;
-            margin-bottom: 2rem;
-            color: #8b0000;
-            border-bottom: 1px solid #333;
-            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            color: #9a8866;
         }
-        .upload-section {
+        .back-link {
+            display: inline-block;
+            color: #9a8866;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #333;
+        }
+        .tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab:hover { color: #e8e8e8; }
+        .tab.active {
+            color: #9a8866;
+            border-bottom-color: #9a8866;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Common */
+        .section {
             background: #222;
             padding: 2rem;
             border-radius: 8px;
             margin-bottom: 2rem;
-            border: 1px dashed #444;
+            border: 1px solid #333;
         }
-        .upload-section.dragover {
-            border-color: #8b0000;
-            background: rgba(139, 0, 0, 0.1);
+        .section h3 {
+            margin-bottom: 1.5rem;
+            color: #ccc;
         }
-        .upload-label {
-            display: block;
-            text-align: center;
-            cursor: pointer;
-            padding: 2rem;
-        }
-        .upload-label span {
-            display: block;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-        .upload-label small { color: #666; }
-        #fileInput { display: none; }
         .btn {
-            background: #8b0000;
-            color: white;
+            background: #9a8866;
+            color: #1a1a1a;
             border: none;
             padding: 0.75rem 1.5rem;
             cursor: pointer;
@@ -55,18 +74,46 @@
             border-radius: 4px;
             transition: background 0.3s;
         }
-        .btn:hover { background: #a00000; }
-        .btn:disabled { background: #444; cursor: not-allowed; }
+        .btn:hover { background: #b8a070; }
+        .btn:disabled { background: #444; cursor: not-allowed; color: #888; }
+        .btn-danger { background: #8b0000; color: white; }
+        .btn-danger:hover { background: #a00000; }
+        .message {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .message.success { background: rgba(0, 128, 0, 0.2); border: 1px solid green; }
+        .message.error { background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; }
+        
+        /* Upload section */
+        .upload-section {
+            border: 1px dashed #444;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        .upload-section:hover, .upload-section.dragover {
+            border-color: #9a8866;
+            background: rgba(154, 136, 102, 0.1);
+        }
+        .upload-section input { display: none; }
+        .upload-section span { display: block; margin-bottom: 0.5rem; }
+        .upload-section small { color: #666; }
+        
+        /* Gallery */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 1rem;
         }
         .gallery-item {
             position: relative;
             aspect-ratio: 1;
-            background: #222;
-            border-radius: 8px;
+            background: #333;
+            border-radius: 4px;
             overflow: hidden;
         }
         .gallery-item img {
@@ -76,10 +123,7 @@
         }
         .gallery-item .overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
@@ -88,26 +132,11 @@
             transition: opacity 0.3s;
         }
         .gallery-item:hover .overlay { opacity: 1; }
-        .delete-btn {
-            background: #8b0000;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .delete-btn:hover { background: #a00000; }
-        .message {
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-        }
-        .message.success { background: rgba(0, 128, 0, 0.2); border: 1px solid green; }
-        .message.error { background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; }
-        .loading { text-align: center; padding: 2rem; color: #666; }
+        
+        /* Preview */
         .preview-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 0.5rem;
             margin: 1rem 0;
         }
@@ -122,76 +151,196 @@
             height: 100%;
             object-fit: cover;
         }
-        .back-link {
-            display: inline-block;
-            color: #8b0000;
-            text-decoration: none;
-            margin-bottom: 1rem;
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
         }
-        .back-link:hover { text-decoration: underline; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #e8e8e8;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #9a8866;
+        }
+        
+        /* Articles list */
+        .articles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .article-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 4px;
+            align-items: center;
+        }
+        .article-item img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .article-item .no-image {
+            width: 100px;
+            height: 70px;
+            background: #333;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 0.8rem;
+        }
+        .article-info {
+            flex: 1;
+        }
+        .article-info h4 {
+            margin-bottom: 0.25rem;
+            color: #e8e8e8;
+        }
+        .article-info small {
+            color: #666;
+        }
+        .article-info p {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="/" class="back-link">← Назад на сайт</a>
-        <h1>Управління фото</h1>
+        <h1>Адмін панель</h1>
         
         <div id="message"></div>
         
-        <div class="upload-section" id="dropZone">
-            <label class="upload-label" for="fileInput">
-                <span>Перетягніть фото сюди або натисніть для вибору</span>
-                <small>JPG, PNG, WebP, TIFF до 20MB</small>
-            </label>
-            <input type="file" id="fileInput" multiple accept="image/*">
-            <div class="preview-grid" id="previewGrid"></div>
-            <button class="btn" id="uploadBtn" style="display: none;">Завантажити</button>
+        <div class="tabs">
+            <button class="tab active" data-tab="photos">Фото</button>
+            <button class="tab" data-tab="articles">Новини та анонси</button>
         </div>
         
-        <h2 style="margin-bottom: 1rem;">Поточні фото</h2>
-        <div class="gallery" id="gallery">
-            <div class="loading">Завантаження...</div>
+        <!-- Photos Tab -->
+        <div class="tab-content active" id="photos">
+            <div class="section">
+                <h3>Завантажити фото</h3>
+                <div class="upload-section" id="dropZone">
+                    <label for="fileInput">
+                        <span>Перетягніть фото або натисніть для вибору</span>
+                        <small>JPG, PNG, WebP, TIFF до 20MB</small>
+                    </label>
+                    <input type="file" id="fileInput" multiple accept="image/*">
+                </div>
+                <div class="preview-grid" id="previewGrid"></div>
+                <button class="btn" id="uploadBtn" style="display: none;">Завантажити</button>
+            </div>
+            
+            <div class="section">
+                <h3>Галерея</h3>
+                <div class="gallery" id="gallery">
+                    <div class="empty-state">Завантаження...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Articles Tab -->
+        <div class="tab-content" id="articles">
+            <div class="section">
+                <h3>Додати новину / анонс</h3>
+                <form id="articleForm">
+                    <div class="form-group">
+                        <label for="articleTitle">Заголовок *</label>
+                        <input type="text" id="articleTitle" required placeholder="Наприклад: Майстер-клас у Варшаві">
+                    </div>
+                    <div class="form-group">
+                        <label for="articleText">Текст *</label>
+                        <textarea id="articleText" required placeholder="Опис новини або анонсу..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="articleImage">Зображення (необов'язково)</label>
+                        <input type="file" id="articleImage" accept="image/*" style="display: block; background: transparent; border: none; padding: 0;">
+                    </div>
+                    <button type="submit" class="btn">Опублікувати</button>
+                </form>
+            </div>
+            
+            <div class="section">
+                <h3>Опубліковані новини</h3>
+                <div class="articles-list" id="articlesList">
+                    <div class="empty-state">Завантаження...</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const previewGrid = document.getElementById('previewGrid');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const gallery = document.getElementById('gallery');
-        const message = document.getElementById('message');
-        
-        let selectedFiles = [];
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
 
+        const message = document.getElementById('message');
         function showMessage(text, type) {
             message.innerHTML = `<div class="message ${type}">${text}</div>`;
             setTimeout(() => message.innerHTML = '', 3000);
         }
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+        // ===== Photos =====
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const gallery = document.getElementById('gallery');
+        let selectedFiles = [];
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
             handleFiles(e.dataTransfer.files);
         });
-
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
         function handleFiles(files) {
             selectedFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
             previewGrid.innerHTML = '';
-            
             selectedFiles.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -202,13 +351,11 @@
                 };
                 reader.readAsDataURL(file);
             });
-
             uploadBtn.style.display = selectedFiles.length > 0 ? 'block' : 'none';
         }
 
         uploadBtn.addEventListener('click', async () => {
             if (selectedFiles.length === 0) return;
-            
             uploadBtn.disabled = true;
             uploadBtn.textContent = 'Завантаження...';
             
@@ -216,12 +363,8 @@
             selectedFiles.forEach(file => formData.append('images', file));
             
             try {
-                const res = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
                 const data = await res.json();
-                
                 if (data.success) {
                     showMessage(`Завантажено ${data.images.length} фото`, 'success');
                     selectedFiles = [];
@@ -230,12 +373,11 @@
                     fileInput.value = '';
                     loadGallery();
                 } else {
-                    showMessage(data.error || 'Помилка завантаження', 'error');
+                    showMessage(data.error || 'Помилка', 'error');
                 }
             } catch (err) {
                 showMessage('Помилка: ' + err.message, 'error');
             }
-            
             uploadBtn.disabled = false;
             uploadBtn.textContent = 'Завантажити';
         });
@@ -244,44 +386,114 @@
             try {
                 const res = await fetch('/api/images');
                 const images = await res.json();
-                
                 if (images.length === 0) {
-                    gallery.innerHTML = '<p style="color: #666;">Немає завантажених фото</p>';
+                    gallery.innerHTML = '<div class="empty-state">Немає фото</div>';
                     return;
                 }
-                
                 gallery.innerHTML = images.map(img => `
                     <div class="gallery-item">
                         <img src="${img.url}" alt="${img.name}">
                         <div class="overlay">
-                            <button class="delete-btn" onclick="deleteImage('${img.name}')">Видалити</button>
+                            <button class="btn btn-danger" onclick="deleteImage('${img.name}')">Видалити</button>
                         </div>
                     </div>
                 `).join('');
             } catch (err) {
-                gallery.innerHTML = '<p style="color: #8b0000;">Помилка завантаження галереї</p>';
+                gallery.innerHTML = '<div class="empty-state">Помилка завантаження</div>';
             }
         }
 
         async function deleteImage(name) {
             if (!confirm('Видалити це фото?')) return;
-            
             try {
                 const res = await fetch(`/api/images/${name}`, { method: 'DELETE' });
                 const data = await res.json();
-                
                 if (data.success) {
                     showMessage('Фото видалено', 'success');
                     loadGallery();
                 } else {
-                    showMessage(data.error || 'Помилка видалення', 'error');
+                    showMessage(data.error || 'Помилка', 'error');
                 }
             } catch (err) {
                 showMessage('Помилка: ' + err.message, 'error');
             }
         }
 
+        // ===== Articles =====
+        const articleForm = document.getElementById('articleForm');
+        const articlesList = document.getElementById('articlesList');
+
+        articleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('articleTitle').value;
+            const text = document.getElementById('articleText').value;
+            const imageInput = document.getElementById('articleImage');
+            
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('text', text);
+            if (imageInput.files[0]) {
+                formData.append('image', imageInput.files[0]);
+            }
+            
+            try {
+                const res = await fetch('/api/articles', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('Новину опубліковано', 'success');
+                    articleForm.reset();
+                    loadArticles();
+                } else {
+                    showMessage(data.error || 'Помилка', 'error');
+                }
+            } catch (err) {
+                showMessage('Помилка: ' + err.message, 'error');
+            }
+        });
+
+        async function loadArticles() {
+            try {
+                const res = await fetch('/api/articles');
+                const articles = await res.json();
+                if (articles.length === 0) {
+                    articlesList.innerHTML = '<div class="empty-state">Немає новин</div>';
+                    return;
+                }
+                articlesList.innerHTML = articles.map(a => `
+                    <div class="article-item">
+                        ${a.image ? `<img src="${a.image}" alt="${a.title}">` : '<div class="no-image">Без фото</div>'}
+                        <div class="article-info">
+                            <h4>${a.title}</h4>
+                            <small>${new Date(a.date).toLocaleDateString('uk-UA')}</small>
+                            <p>${a.text}</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteArticle('${a.id}')">Видалити</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                articlesList.innerHTML = '<div class="empty-state">Помилка завантаження</div>';
+            }
+        }
+
+        async function deleteArticle(id) {
+            if (!confirm('Видалити цю новину?')) return;
+            try {
+                const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('Новину видалено', 'success');
+                    loadArticles();
+                } else {
+                    showMessage(data.error || 'Помилка', 'error');
+                }
+            } catch (err) {
+                showMessage('Помилка: ' + err.message, 'error');
+            }
+        }
+
+        // Load initial data
         loadGallery();
+        loadArticles();
     </script>
 </body>
 </html>

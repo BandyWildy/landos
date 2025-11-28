@@ -200,7 +200,6 @@ nav {
 #about {
     padding: 6rem 0;
     background: var(--metallic-gradient);
-    text-align: center;
     border-top: 1px solid rgba(255,255,255,0.05);
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
@@ -208,18 +207,191 @@ nav {
 #about h2 {
     font-family: 'Cinzel', serif;
     font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--light-color);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-photo {
+    position: relative;
+}
+
+.about-photo img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,0.1);
+    filter: grayscale(20%);
+    transition: filter 0.4s;
+}
+
+.about-photo:hover img {
+    filter: grayscale(0%);
+}
+
+.about-photo::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: -10px;
+    bottom: -10px;
+    border: 1px solid var(--gold-accent);
+    z-index: -1;
+}
+
+.about-text {
+    text-align: left;
+}
+
+.philosophy-quote {
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--light-color);
+    line-height: 1.8;
     margin-bottom: 2rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--gold-accent);
+    position: relative;
+}
+
+.about-highlights {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.about-highlights li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.about-highlights li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--gold-accent);
+    font-size: 0.6rem;
+    top: 0.4rem;
+}
+
+.about-description {
+    color: var(--text-color);
+    line-height: 1.9;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+}
+
+.about-instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gold-accent);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.about-instagram:hover {
+    color: var(--light-color);
+}
+
+/* News Section */
+#news {
+    padding: 6rem 0;
+    background: var(--darker-color);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+#news h2 {
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
     color: var(--light-color);
     letter-spacing: 4px;
     text-transform: uppercase;
 }
 
-#about p {
-    max-width: 750px;
-    margin: 0 auto;
-    font-size: 1.2rem;
-    line-height: 2;
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.news-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+}
+
+.news-card:hover {
+    border-color: var(--gold-accent);
+    transform: translateY(-5px);
+}
+
+.news-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.news-card:hover .news-image img {
+    transform: scale(1.05);
+}
+
+.news-content {
+    padding: 1.5rem;
+}
+
+.news-date {
+    display: block;
+    color: var(--gold-accent);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.news-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: var(--light-color);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.news-text {
     color: var(--text-color);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.news-empty {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    padding: 2rem;
+    grid-column: 1 / -1;
 }
 
 /* Gallery Section */
@@ -409,11 +581,43 @@ footer p {
         font-size: 1rem;
     }
 
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .about-photo {
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    .about-text {
+        text-align: center;
+    }
+
+    .philosophy-quote {
+        border-left: none;
+        border-top: 2px solid var(--gold-accent);
+        padding-left: 0;
+        padding-top: 1.5rem;
+    }
+
+    .about-highlights {
+        display: inline-block;
+        text-align: left;
+    }
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
     .gallery-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
 
     #about h2,
+    #news h2,
     #gallery h2,
     #book h2 {
         font-size: 2rem;
