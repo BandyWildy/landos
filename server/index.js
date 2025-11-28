@@ -24,22 +24,26 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage,
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 20 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        const allowedTypes = /jpeg|jpg|png|webp/;
+        const allowedTypes = /jpeg|jpg|png|webp|tiff|tif/;
         const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-        const mime = allowedTypes.test(file.mimetype);
-        if (ext && mime) {
+        if (ext) {
             cb(null, true);
         } else {
-            cb(new Error('Only images allowed (jpg, png, webp)'));
+            cb(new Error('Only images allowed (jpg, png, webp, tiff)'));
         }
     }
 });
 
-app.use(express.static(path.join(__dirname, '../public')));
-app.use('/admin', express.static(path.join(__dirname, '../admin')));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Admin panel route
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../admin/index.html'));
+});
+app.use('/admin', express.static(path.join(__dirname, '../admin')));
 
 app.get('/api/images', (req, res) => {
     fs.readdir(uploadDir, (err, files) => {
@@ -47,7 +51,7 @@ app.get('/api/images', (req, res) => {
             return res.status(500).json({ error: 'Failed to read images' });
         }
         const images = files
-            .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f))
+            .filter(f => /\.(jpg|jpeg|png|webp|tiff|tif)$/i.test(f))
             .map(f => ({
                 name: f,
                 url: `/images/${f}`,
